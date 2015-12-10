@@ -1,0 +1,5 @@
+source "https://api.berkshelf.com"
+
+cookbook 'emulab-gcc', path: '../emulab-gcc'
+
+metadata

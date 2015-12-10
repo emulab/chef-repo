@@ -1,0 +1,21 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[emulab-slurm::default]
+      - recipe[emulab-slurm::accounting]
+      - recipe[emulab-slurm::example]
+    attributes:
+      slurm:
+        node_list: "default-ubuntu-1404"
+        control_machine: "default-ubuntu-1404"
+        control_addr: "127.0.0.1"

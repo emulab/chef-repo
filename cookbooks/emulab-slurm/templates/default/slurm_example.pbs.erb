@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#SBATCH --ntasks=<%= @ntasks %>
+#SBATCH --cpus-per-task=1
+
+#SBATCH --output=<%= @dir %>/<%= @program %>.out
+#SBATCH --error=<%= @dir %>/<%= @program %>.err
+
+#SBATCH --time=00:00:10
+#SBATCH --account=<%= @account %>
+
+mpirun -np <%= @ntasks %> <%= @dir %>/<%= @program %>

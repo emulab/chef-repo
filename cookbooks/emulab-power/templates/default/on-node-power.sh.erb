@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Test script from Stearns, Michael (Mik) <michael.stearns@hpe.com>
+
+count=0
+
+while [ 1 ];
+do
+  count=$(($count+1))
+
+  ipmi-raw --no-probing --driver-type=SSIF --driver-address=0x10 --driver-device=/dev/i2c-0 0 6 0x52 0x05 0x40 0x01 0x88
+  ret=$?
+  echo Count: $count
+  if [ $ret -ne 0 ]
+    then
+      echo Error
+      echo $count
+      exit
+  fi
+  sleep 0.5
+done

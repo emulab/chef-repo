@@ -1,0 +1,6 @@
+source "https://api.berkshelf.com"
+
+cookbook 'emulab-gcc', path: '../emulab-gcc'
+cookbook 'emulab-openmpi', path: '../emulab-openmpi'
+
+metadata
