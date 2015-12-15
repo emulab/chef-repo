@@ -1,0 +1,10 @@
+#!/bin/bash 
+# Script sets frequency on all 8 cores
+FREQ=$1
+if [ "$FREQ" = "600000" ] || [ "$FREQ" = "800000" ] || [ "$FREQ" = "1200000" ] || [ "$FREQ" = "2400000" ] ; then
+  for i in `seq 0 7` ; do 
+    echo $FREQ > "/sys/devices/system/cpu/cpu$i/cpufreq/scaling_max_freq" 
+  done
+else
+  echo "Usage: $0 <freq>, where <freq> is one of: 600000,800000,1200000,2400000"
+fi
