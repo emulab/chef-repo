@@ -18,6 +18,8 @@ include_recipe "emulab-gcc"
 
 package "git"
 
+directory node['blis']['root_level_dir']
+
 bash 'BLIS: Download, configure, and build' do
   # "source /etc/profile" will make sure that files in /etc/profile.d/ are sourced (and the new GCC is used)
   code <<-EOH 
@@ -57,7 +59,7 @@ ruby_block "Log results of a minimal BLIS test" do
   only_if { ::File.exists?("#{minimalOut}.perf") }
   block do
     File.open("#{minimalOut}.perf").each do |line|
-      Chef::Log.info(line)
+      Chef::Log.info(line) 
     end
   end
 end
