@@ -157,12 +157,44 @@ ms0223.utah.cloudlab.us 2400000 69996
 Chef Zero
 ------------
 
-If you want to avoid dealing with Chef server, you can use Chef Zero instead. Similar to the instuctions for obtaining on-node power (see: https://github.com/emulab/chef-repo/blob/master/docs/aarch64-on-node-power.md), try the following:
-- Install Chef Client on the ARM node, exactly as described above
-- As root: chef-client -z -o emulab-cpu-freq
-- Wait until the node reboots
-- Again, as root: chef-client -z -o emulab-cpu-freq
-- Set frequency, as described above
+The procedure above allows saving time if multiple nodes are configured using Chef.
+
+For single-node experiments, if you want to avoid managing Chef server, you can use Chef Zero instead. Similar to the instructions for obtaining on-node power (see: https://github.com/emulab/chef-repo/blob/master/docs/aarch64-on-node-power.md), try the following:
+
+- Install Chef Client on the ARM node:
+```
+root@node:~# wget https://s3-us-west-2.amazonaws.com/cloudlab-dev/chef_12.5.1%2B20151030195520-1_arm64.deb -O chef_client.deb
+root@node:~# dpkg -i chef_client.deb
+```
+
+- Clone the repo:
+```
+root@node:~# git clone https://github.com/emulab/chef-repo.git
+```
+
+- Run the cookbook with Chef Zero:
+```
+root@node:~# cd chef-repo/cookbooks
+root@node:/root/chef-repo/cookbooks/# chef-client -z -o emulab-cpu-freq
+```
+
+- Wait until the node reboots, log in, switch to root
+
+- Run the cookbook again: 
+```
+root@node:~# cd chef-repo/cookbooks
+root@node:/root/chef-repo/cookbooks/# chef-client -z -o emulab-cpu-freq
+```
+
+- Set frequency, as described above. For instance:
+```
+root@node:~# set_freq.sh 1200000
+root@node:~# cat /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state
+ms0223.utah.cloudlab.us 600000 27840
+ms0223.utah.cloudlab.us 800000 1885
+ms0223.utah.cloudlab.us 1200000 27105
+ms0223.utah.cloudlab.us 2400000 69996
+```
 
 Questions?
 -------------
