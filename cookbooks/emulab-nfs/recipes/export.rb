@@ -8,11 +8,11 @@
 # Run configuration from the recipe in the dependency cookbook
 include_recipe 'nfs::server'
 
-directory node['nfs']['export']['dir'] do
+directory node['nfs']['dir'] do
   action :create
 end
 
-nfs_export node['nfs']['export']['dir'] do
+nfs_export node['nfs']['dir'] do
   network	node['nfs']['export']['network']
   writeable	node['nfs']['export']['writeable']
   sync		node['nfs']['export']['sync']

@@ -8,6 +8,8 @@ name "nfs_server"
 description "Role applied to the node that should be an NFS server."
 override_attributes(
   "nfs" => {
+    "server" => "x-node-0",
+    "dir" => "/exp-share",
     "packages" => [ "portmap", "nfs-common", "nfs-kernel-server" ],
     "port" => {
       "statd" => 32765,

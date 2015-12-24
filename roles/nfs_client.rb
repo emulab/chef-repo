@@ -8,6 +8,8 @@ name "nfs_client"
 description "Role applied to the system(s) that should act as NFS client(s)."
 override_attributes(
   "nfs" => {
+    "server" => "x-node-0",
+    "dir" => "/exp-share",
     "mount" => {
       "dir" => "/exp-share",
       "source" => "x-node-0:/exp-share",
