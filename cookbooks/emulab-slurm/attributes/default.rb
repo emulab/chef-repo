@@ -8,7 +8,7 @@ default["slurm"]["cluster_name"] = "default"
 default["slurm"]["account_name"] = "perf"
 
 # This is where example will be installed
-default["slurm"]["scratch"] = "/scratch"
+default["slurm"]["scratch"] = "/exp-share"
 
 # Attributes for accounting configuration
 default["slurm"]["mysql_root_pass"] = "Ch@ngeMePle@se!"
