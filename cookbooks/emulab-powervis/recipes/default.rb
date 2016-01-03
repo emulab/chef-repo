@@ -20,6 +20,13 @@ bash 'Install ggplot2, required by powervis - might take some time' do
   not_if { ::File.directory?("/usr/local/lib/R/site-library/ggplot2") }
 end
 
+bash 'Install gridExtra' do
+  code <<-EOH
+    R -e "install.packages('gridExtra', repos='https://cran.rstudio.com/')"
+  EOH
+  not_if { ::File.directory?("/usr/local/lib/R/site-library/gridExtra") }
+end
+
 # Delete the default app (what is in /srv/shiny-server, unless that dir already contains powervis
 directory '/srv/shiny-server' do
   recursive true
