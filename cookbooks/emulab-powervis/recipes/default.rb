@@ -47,3 +47,34 @@ template "/var/log/power/SAMPLE.csv" do
   source 'SAMPLE.erb'
   mode 0644
 end
+
+# Integration with apache2 for publishing data sets
+
+# Install apache2 using apache2 cookbook
+node.override["apache"]["listen_ports"]= %w(8080)
+node.override["apache"]['default_site_port']= "8080"
+node.override['apache']['default_site_enabled']= true
+node.override['apache']['docroot_dir']= "/var/www"
+include_recipe "apache2"
+include_recipe "apache2::mod_autoindex"
+
+# Make /var/www/html usable by shiny
+group "www-data" do
+  action :modify
+  members "shiny"
+  append true
+end
+directory node["apache"]["docroot_dir"] do
+  mode '774'
+  group 'www-data'
+end
+# Strangely, html dir is needed; otherwise shiny can't save datasets
+directory "#{node['apache']['docroot_dir']}/html" do
+  mode '774'
+  group 'www-data'
+end
+
+# Show index by default instead of the default index.html
+file "#{node['apache']['docroot_dir']}/index.html" do
+  action :delete
+end
