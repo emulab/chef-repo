@@ -46,20 +46,25 @@ end
 template "#{testDir}/input.operations.minimal"  do
   source 'input.operations.minimal.erb'
 end
-bash 'Minimal BLIS test run' do
-  code <<-EOH
-    ./test_libblis.x -g input.general.minimal -o input.operations.minimal 2>&1 > #{minimalOut}
-    tail -5 #{minimalOut} > #{minimalOut}.perf
-  EOH
-  cwd "#{testDir}"
-  only_if { File.exists?("#{testDir}/test_libblis.x") }
-end
 
-ruby_block "Log results of a minimal BLIS test" do
-  only_if { ::File.exists?("#{minimalOut}.perf") }
-  block do
-    File.open("#{minimalOut}.perf").each do |line|
-      Chef::Log.info(line) 
-    end
-  end
-end
+log "To run a small BLIS test, try, for instance: #{testDir}/test_libblis.x -g #{testDir}/input.general.minimal -o #{testDir}/input.operations.minimal"
+
+# The actual test is best to run by hand if necessary  
+#
+# bash 'Minimal BLIS test run' do
+#   code <<-EOH
+#     ./test_libblis.x -g input.general.minimal -o input.operations.minimal 2>&1 > #{minimalOut}
+#     tail -5 #{minimalOut} > #{minimalOut}.perf
+#   EOH
+#   cwd "#{testDir}"
+#   only_if { File.exists?("#{testDir}/test_libblis.x") }
+# end
+# 
+# ruby_block "Log results of a minimal BLIS test" do
+#   only_if { ::File.exists?("#{minimalOut}.perf") }
+#   block do
+#     File.open("#{minimalOut}.perf").each do |line|
+#       Chef::Log.info(line) 
+#     end
+#   end
+# end

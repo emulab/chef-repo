@@ -20,6 +20,13 @@ bash 'Install ggplot2, required by powervis - might take some time' do
   not_if { ::File.directory?("/usr/local/lib/R/site-library/ggplot2") }
 end
 
+bash 'Install gridExtra' do
+  code <<-EOH
+    R -e "install.packages('gridExtra', repos='https://cran.rstudio.com/')"
+  EOH
+  not_if { ::File.directory?("/usr/local/lib/R/site-library/gridExtra") }
+end
+
 # Delete the default app (what is in /srv/shiny-server, unless that dir already contains powervis
 directory '/srv/shiny-server' do
   recursive true
@@ -39,4 +46,35 @@ directory "/var/log/power"
 template "/var/log/power/SAMPLE.csv" do
   source 'SAMPLE.erb'
   mode 0644
+end
+
+# Integration with apache2 for publishing data sets
+
+# Install apache2 using apache2 cookbook
+node.override["apache"]["listen_ports"]= %w(8080)
+node.override["apache"]['default_site_port']= "8080"
+node.override['apache']['default_site_enabled']= true
+node.override['apache']['docroot_dir']= "/var/www"
+include_recipe "apache2"
+include_recipe "apache2::mod_autoindex"
+
+# Make /var/www/html usable by shiny
+group "www-data" do
+  action :modify
+  members "shiny"
+  append true
+end
+directory node["apache"]["docroot_dir"] do
+  mode '774'
+  group 'www-data'
+end
+# Strangely, html dir is needed; otherwise shiny can't save datasets
+directory "#{node['apache']['docroot_dir']}/html" do
+  mode '774'
+  group 'www-data'
+end
+
+# Show index by default instead of the default index.html
+file "#{node['apache']['docroot_dir']}/index.html" do
+  action :delete
 end

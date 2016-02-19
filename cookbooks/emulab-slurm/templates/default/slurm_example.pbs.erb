@@ -9,4 +9,4 @@
 #SBATCH --time=00:00:10
 #SBATCH --account=<%= @account %>
 
-mpirun -np <%= @ntasks %> <%= @dir %>/<%= @program %>
+mpirun -np <%= @ntasks %> --allow-run-as-root <%= @dir %>/<%= @program %>
