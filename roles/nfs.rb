@@ -8,8 +8,11 @@ name "nfs"
 description "Role applied to all NFS nodes - server and all the clients"
 override_attributes(
   "nfs" => {
-    "server" => "x-node-0",
-    "dir" => "/exp-share"
+    "server" => "head",
+    "dir" => "/exp-share",
+    "export" => {
+      "network" => "10.0.0.0/8"
+    }
   }
 )
 run_list [ "emulab-nfs" ]
