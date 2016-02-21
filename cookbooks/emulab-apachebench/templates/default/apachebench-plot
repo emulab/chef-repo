@@ -1,0 +1,21 @@
+# Create a png file
+set terminal png size 500,500
+# Set the aspect ratio of the graph
+set size 1, 1
+# Define where the graph is saved 
+set output "<%= @output %>"
+# Set graph title
+set title "Benchmark Testing"
+# Location of the legend/key
+set key left top
+# Draw gridlines oriented along the y axis
+set grid y
+# Label the x-axis
+set xlabel 'Requests'
+# Label the y-axis
+set ylabel "Response Time (ms)"
+# Use tabs as the delimiter instead of spaces (default)
+set datafile separator '\t'
+# Plot the data
+plot "<%= @input %>" every ::2 using 5 title 'Response Time' with lines
+exit
