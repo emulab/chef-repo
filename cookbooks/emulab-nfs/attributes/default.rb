@@ -13,6 +13,6 @@ default['nfs']["port"]["mountd"] = 32767
 default['nfs']["port"]["lockd"] = 32768
     
 default['nfs']["export"]["network"] = "10.0.0.0/8"
-default['nfs']["export"]["writable"] = true
+default['nfs']["export"]["writeable"] = true
 default['nfs']["export"]["sync"] = true
 default['nfs']["export"]["options"] = [ "no_root_squash" ]
