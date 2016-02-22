@@ -65,5 +65,18 @@ ports.each do |port|
       source "file://#{graph_file}"
       ignore_failure true
     end
+   
+    # Default index.html prevents seeing the directory listing; rename it if it exists (make copy and delete)
+    index_file = "#{node['apache']['docroot_dir']}/index.html"
+    backup_copy = "#{node['apache']['docroot_dir']}/index-backup.html" 
+    remote_file "Making a copy of index.html" do
+      path backup_copy 
+      source "file://#{index_file}"
+      only_if { ::File.exists?(index_file) }
+    end
+    file index_file do
+      action :delete
+      only_if { ::File.exists?(index_file) }
+    end
   end
 end
