@@ -8,9 +8,9 @@ name "apache2"
 description "This role is applied to the nodes on which apache2 should be installed"
 override_attributes(
   "apache" => {
-    "listen_ports" => [8080],
+    "listen" => ["8080"],
     "default_site_port" => "8080",
-    "default_site_enabled" => true
+    "default_site_enabled" => true,
   }
 )
 run_list [ "apache2", "apache2::mod_autoindex" ]
