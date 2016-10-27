@@ -33,7 +33,7 @@ host=$(hostname -f)
 file="<%= @dest_dir %>/$host.csv"
   
 # Create new directory if necessary
-dir=`dirname $trace`
+dir=`dirname $file`
 if [ ! -d "$dir" ]; then
   mkdir -p $dir
 fi
