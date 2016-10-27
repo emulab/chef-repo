@@ -8,22 +8,26 @@
 #
 
 record_single_sample() {
+# This function records a single power measurements (with hostname and timestamp).
+# If $3 does not have a comma, it is interpreted as a single ipmi-sensor ID; measurement for this sensor gets recorded.
+# It it includes a comma, it is interpreted as a pair of sensor IDs for Current and Voltage;
+# measurements for Current and Voltage and multiplied and recorded.
+#
   host=$1
   file=$2
   sensor_id=$3
 
-  # Get a measurement by sensor id
-  power=`ipmi-sensors -r $sensor_id --comma-separated-output --no-header-output | awk -F',' '{print $4}'`
+  if [[ $sensor_id == *","* ]] ; then
+    # Get Current and Voltage measuremetns and multiply them
+    power=`ipmi-sensors -r $sensor_id --comma-separated-output --no-header-output | awk -F',' '{print $4}' | paste -sd"*" - | bc`
+  else
+    # Get a measurement by sensor id
+    power=`ipmi-sensors -r $sensor_id --comma-separated-output --no-header-output | awk -F',' '{print $4}'`
+  fi  
 
   timestamp=`date +"%Y-%m-%d %H:%M:%S.%3N"`
-  record="$host,$timestamp,$power"
-  
-  # Append to the specified file
-  echo "$record" >> $file
+  echo "$host,$timestamp,$power" >> $file
 }
-
-# Run ipmi-sensors once and discard output (it is different for the first run because of caching) 
-ipmi-sensors &>/dev/null
 
 host=$(hostname -f)
 file="<%= @dest_dir %>/$host.csv"
@@ -42,6 +46,15 @@ if [ "$chassis_model" == "UCSC-C220-M4S" ]; then
   # Tuned for the c220g2 chassis
   sensor_name="PSU1_POUT"
   sensor_id=`ipmi-sensors | grep "$sensor_name" | sed "s/\ .*//g"`
+elif [ "$chassis_model" == "PowerEdge C6320" ]; then
+  # Tuned for the c6320 chassis
+  #
+  # One way:
+  #sensor_name="Pwr Consumption"
+  #sensor_id=`ipmi-sensors | grep "$sensor_name" | sed "s/\ .*//g"`
+  #
+  # Another way (seems to be more responsive to load; comma-separated list of IDs):
+  sensor_id=`ipmi-sensors | grep -E "Input Current|Input Voltage" | sed "s/\ .*//g" | paste -sd"," -`
 else
   echo "Unsupported chassis model. Exiting"
   exit 1
