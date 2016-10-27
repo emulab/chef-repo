@@ -6,6 +6,11 @@
 
 log "Running x86_64-specific recipe"
 
+# Prerequisites
+apt_package "freeipmi"
+apt_package "openipmi"
+execute "modprobe ipmi_devintf"
+
 # Create a directory for logger scripts
 logger_dir = node["power_x86"]["logger_dir"]
 directory logger_dir
