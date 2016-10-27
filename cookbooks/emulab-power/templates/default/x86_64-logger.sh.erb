@@ -29,6 +29,9 @@ record_single_sample() {
   echo "$host,$timestamp,$power" >> $file
 }
 
+# Run ipmi once and discard output (first run is different, it includes caching info)
+ipmi-sensors &> /dev/null
+
 host=$(hostname -f)
 file="<%= @dest_dir %>/$host.csv"
   
