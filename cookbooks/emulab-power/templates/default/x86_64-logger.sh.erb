@@ -1,0 +1,63 @@
+#!/bin/bash
+# Start inifinite power recording
+# 
+# ----------------------------------------------
+# This file is a Chef template.
+# It is automatically completed and distributed. 
+# ----------------------------------------------
+#
+
+record_single_sample() {
+  host=$1
+  file=$2
+  sensor_id=$3
+
+  # Get a measurement by sensor id
+  power=`ipmi-sensors -r $sensor_id --comma-separated-output --no-header-output | awk -F',' '{print $4}'`
+
+  timestamp=`date +"%Y-%m-%d %H:%M:%S.%3N"`
+  record="$host,$timestamp,$power"
+  
+  # Append to the specified file
+  echo "$record" >> $file
+}
+
+host=$(hostname -f)
+file="<%= @dest_dir %>/$host.csv"
+  
+# Create new directory if necessary
+dir=`dirname $trace`
+if [ ! -d "$dir" ]; then
+  mkdir -p $dir
+fi
+
+chassis_model=`dmidecode -t 1 | grep "Product Name" | sed "s/.*:\ //" | sed "s/\ *$//"`
+#
+# ToDo: add other chasses
+#
+if [ "$chassis_model" == "UCSC-C220-M4S" ]; then
+  # Tuned for the c220g2 chassis
+  sensor_name="PSU1_POUT"
+  sensor_id=`ipmi-sensors | grep "$sensor_name" | sed "s/\ .*//g"`
+else
+  echo "Unsupported chassis model. Exiting"
+  exit 1
+fi
+
+samples="<%= @sample_limit %>"
+
+if [ "$samples" == "INF" ] ; then
+  # Log infinitely
+  while true ; do
+    record_single_sample $host $file $sensor_id
+    sleep <%= @sample_interval_sec %>
+  done
+else
+  # Log only the specified number of samples and exit
+  count=0
+  while [[ "$count" -lt "$samples" ]] ; do
+    record_single_sample $host $file $sensor_id
+    sleep <%= @sample_interval_sec %>
+    count=$((count + 1))
+  done
+fi

@@ -4,6 +4,8 @@
 #
 #
 
+log "Running aarch64-specific recipe"
+
 # Check if the kernel is already updated to the specified version
 if node['kernel']['release'] == node["power_arm"]["kernel_version"]
   log "Kernel has been patched already - version #{node["power_arm"]["kernel_version"]}"
@@ -17,7 +19,7 @@ if node['kernel']['release'] == node["power_arm"]["kernel_version"]
 
   log "Create a test script in /tmp"
   template "/tmp/on-node-power.sh" do
-    source "on-node-power.sh.erb"
+    source "aarch64-logger.sh.erb"
   end
 else
   # download the tarball (or use exisiting one if the checksum matches)
