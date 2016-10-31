@@ -1,5 +1,6 @@
 source 'https://supermarket.chef.io'
 
 cookbook 'emulab-gcc', path: '../../cookbooks/emulab-gcc'
+cookbook 'emulab-R', path: '../../cookbooks/emulab-R'
 
 metadata

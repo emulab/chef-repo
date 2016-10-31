@@ -1,5 +1,7 @@
-source "https://api.berkshelf.com"
+source 'https://supermarket.chef.io'
 
+cookbook 'apt', '~> 5.0.0'
+cookbook 'mysql', '~> 8.1.1'
 cookbook 'emulab-gcc', path: '../emulab-gcc'
 cookbook 'emulab-openmpi', path: '../emulab-openmpi'
 

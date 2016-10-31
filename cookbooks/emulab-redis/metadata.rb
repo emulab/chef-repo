@@ -1,10 +1,10 @@
-name 'emulab-redis'
-maintainer 'The Authors'
-maintainer_email 'you@example.com'
-license 'all_rights'
-description 'Installs/Configures emulab-redis'
-long_description 'Installs/Configures emulab-redis'
-version '0.1.0'
+name             'emulab-redis'
+maintainer       'Dmitry Duplyakin'
+maintainer_email 'dmitry.duplyakin@colorado.edu'
+license          'All rights reserved'
+description      'Installs/Configures emulab-redis'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version          '1.0.0'
 
 # If you upload to Supermarket you should set this so your cookbook
 # gets a `View Issues` link
