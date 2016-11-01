@@ -53,6 +53,12 @@ template "#{node['powervis']['logs_dir']}/random_sample.csv" do
   only_if { ::Dir.entries(node['powervis']['logs_dir']).size <= 2 }
 end
 
+# Install the custom script for running and recording power events
+template "/usr/bin/run-power-event" do 
+  source 'run-power-event.sh.erb'
+  mode 0755
+end
+
 # Integration with apache2 for publishing data sets
 
 # Install apache2 using apache2 cookbook
