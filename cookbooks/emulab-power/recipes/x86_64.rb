@@ -31,7 +31,7 @@ end
 
 # Create directory for power logs
 directory node["power_x86"]["logs_dir"] do
-  mode '0744'
+  mode '0755'
 end
 
 # Start the logger in the background
