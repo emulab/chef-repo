@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# This script runs a given shell commands and records its start and end timestamps in the specified file 
+#
+# Developed by: Dmitry Duplyakin <dmitry.duplyakin@colorado.edu>
+
+scriptname=$0
+default_events_file='/var/log/power_events.log'
+
+function usage {
+    echo "Usage: $scriptname command [label] [file]"
+    echo "	command: string with the command that should be run and recorded"
+    echo "	label: label that helps identify individual runs (if not provided, \"noname\" is used)"
+    echo "	file: path to the output file (if not provided, \"$default_events_file\" is used)"
+    exit 0
+}
+
+if [ "$#" == 1 ]; then
+  cmd=$1    
+  label="noname"
+  events_file=$default_events_file
+elif [ "$#" == 2 ]; then
+  cmd=$1    
+  label=$2
+  events_file=$default_events_file
+elif [ "$#" == 3 ]; then
+  cmd=$1    
+  label=$2
+  events_file=$3
+else 
+  usage
+fi
+
+if [ ! -f $events_file ]; then
+  # File does not exist
+  new_id=1
+elif [ ! -s $events_file ]; then
+  # File exists by empty
+  new_id=1
+else
+  last_id=`cat $events_file | awk -F',' '{print $1}' | sort -n | tail -1`
+  new_id=$((last_id+1))
+fi
+echo "ID assigned to the current run: $new_id"
+
+start_timestamp=`date '+%Y-%m-%d %H:%M:%S.%3N'`
+record="$new_id,$label,START,$start_timestamp"
+echo $record >> $events_file 
+echo "Recorded: $record in $events_file"
+echo "Starting to run the given command"
+
+eval $cmd
+
+end_timestamp=`date '+%Y-%m-%d %H:%M:%S.%3N'`
+record="$new_id,$label,END,$end_timestamp"
+echo $record >> $events_file 
+echo "Recorded: $record in $events_file"

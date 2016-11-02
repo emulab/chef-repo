@@ -1,0 +1,7 @@
+source 'https://supermarket.chef.io'
+
+cookbook 'emulab-petsc', path: '../../cookbooks/emulab-petsc'
+cookbook 'emulab-openmpi', path: '../../cookbooks/emulab-openmpi'
+cookbook 'emulab-gcc', path: '../../cookbooks/emulab-gcc'
+
+metadata

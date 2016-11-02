@@ -1,5 +1,5 @@
 source 'https://supermarket.chef.io'
 
-cookbook 'apt', '~> 5.0.0'
-
 metadata
+
+cookbook 'anaconda', '~> 0.6.2'

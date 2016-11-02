@@ -1,0 +1,8 @@
+source 'https://supermarket.chef.io'
+
+cookbook 'apache2', '~> 3.2.2'
+cookbook 'emulab-gcc', path: '../../cookbooks/emulab-gcc'
+cookbook 'emulab-R', path: '../../cookbooks/emulab-R'
+cookbook 'emulab-shiny', path: '../../cookbooks/emulab-shiny'
+
+metadata

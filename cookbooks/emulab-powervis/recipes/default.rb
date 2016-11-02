@@ -42,16 +42,27 @@ git '/srv/shiny-server' do
 end
 
 # Optional: add a sample of power data in /var/log/power so the dashboard doesn't return an error
-directory "/var/log/power"
-template "/var/log/power/SAMPLE.csv" do
+directory node['powervis']['logs_dir'] do
+  mode '0755'
+end
+
+template "#{node['powervis']['logs_dir']}/random_sample.csv" do
   source 'SAMPLE.erb'
   mode 0644
+  # Only add this sample if the dir is empty (two entries are "." and "..")
+  only_if { ::Dir.entries(node['powervis']['logs_dir']).size <= 2 }
+end
+
+# Install the custom script for running and recording power events
+template "/usr/bin/run-power-event" do 
+  source 'run-power-event.sh.erb'
+  mode 0755
 end
 
 # Integration with apache2 for publishing data sets
 
 # Install apache2 using apache2 cookbook
-node.override["apache"]["listen_ports"]= %w(8080)
+node.override["apache"]["listen"]= %w(8080)
 node.override["apache"]['default_site_port']= "8080"
 node.override['apache']['default_site_enabled']= true
 node.override['apache']['docroot_dir']= "/var/www"
