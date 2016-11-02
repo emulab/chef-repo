@@ -4,6 +4,7 @@ default["power_x86"]["logs_dir"] = '/var/log/power_logs'
 default["power_x86"]["sample_interval_sec"] = 1
 # Number of samples to take or 'INF'
 default["power_x86"]["sample_limit"] = 'INF'
+default["power_x86"]["logger_pid_file"] = '/var/run/power_logger.pid'
 
 # aarch64-specific attributes
 default["power_arm"]["kernel_version"] = '3.13.11-ckt29' 

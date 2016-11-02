@@ -34,5 +34,15 @@ directory node["power_x86"]["logs_dir"] do
   mode '0755'
 end
 
-# Start the logger in the background
-execute "bash #{logger_path} &"
+# Start the logger in the background (if no pid file is present)
+
+bash 'logger' do
+  code <<-EOH
+    bash #{logger_path} &
+    echo $! > #{node['power_x86']['logger_pid_file']}
+  EOH
+  not_if { ::File.exist?(node["power_x86"]["logger_pid_file"]) }
+end
+
+log "Power logger should be running now. pid file: #{node['power_x86']['logger_pid_file']}. log dir: #{node['power_x86']['logs_dir']}"
+log "If logger is not running, remove the pid file and rerun the cookbook"
