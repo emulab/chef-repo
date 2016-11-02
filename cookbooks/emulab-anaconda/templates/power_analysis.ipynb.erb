@@ -1,0 +1,125 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 64,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Error: no valid path to a power trace is specified\n"
+     ]
+    },
+    {
+     "ename": "SystemExit",
+     "evalue": "1",
+     "output_type": "error",
+     "traceback": [
+      "An exception has occurred, use %tb to see the full traceback.\n",
+      "\u001b[1;31mSystemExit\u001b[0m\u001b[1;31m:\u001b[0m 1\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "To exit: use 'exit', 'quit', or Ctrl-D.\n"
+     ]
+    }
+   ],
+   "source": [
+    "%matplotlib inline\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "from datetime import datetime\n",
+    "import sys\n",
+    "\n",
+    "# In order to run the code below, set the path to a power trace. For instance: \n",
+    "# trace_path=\"/var/log/power_logs/c220g2-011327.wisc.cloudlab.us.csv\"\n",
+    "trace_path=None\n",
+    "\n",
+    "if not trace_path:\n",
+    "    print(\"Error: no valid path to a power trace is specified\")\n",
+    "    sys.exit(1)\n",
+    "    \n",
+    "trace_timestamp_format = '%Y-%m-%d %H:%M:%S.%f'\n",
+    "trace_columns = [\"Hostname\",\"Timestamp\",'Power']\n",
+    "\n",
+    "def get_file_contents(file_path, cleanup=True):\n",
+    "    \"\"\"\n",
+    "    This method returns the contents of the file at the specified path.\n",
+    "    Optionally, it cleans up the contents by removing EOL chars and replacing tabs with spaces,\n",
+    "    as well removes leading, trailing, and duplicate spaces. It will also remove empty lines.\n",
+    "    \"\"\"    \n",
+    "    with open(file_path, \"r\") as f: \n",
+    "        contents = f.readlines()\n",
+    "    if cleanup:\n",
+    "        return filter(None, \\\n",
+    "                      [' '.join(l.rstrip('\\n').replace('\\t',' ').strip().split()) \\\n",
+    "                       for l in contents])\n",
+    "    else:\n",
+    "        return contents\n",
+    "\n",
+    "def sample_to_list(sample):\n",
+    "    \"\"\"\n",
+    "    This method splits a given sample string into fields, converts time field to the time format,\n",
+    "    converts powers to numeric values, and returns a list of fields\n",
+    "    \"\"\" \n",
+    "    fields = sample.split(',')\n",
+    "    fields[1] = datetime.strptime(fields[1], trace_timestamp_format)\n",
+    "    fields[2] = float(fields[2])\n",
+    "    return fields \n",
+    "\n",
+    "trace = get_file_contents(trace_path, cleanup=True)\n",
+    "\n",
+    "# Convert a list of samples into a pandas dataframe\n",
+    "dict_list = []\n",
+    "for s in trace:\n",
+    "    dict_list.append({ k:v for k,v in zip(trace_columns, sample_to_list(s)) })\n",
+    "trace_df = pd.DataFrame(dict_list)\n",
+    "\n",
+    "# Print some stats\n",
+    "print trace_df.info()\n",
+    "print trace_df.describe()\n",
+    "\n",
+    "# Sample plots\n",
+    "trace_df['Power'].plot(kind='hist')\n",
+    "trace_df.plot(x='Timestamp', y='Power')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
