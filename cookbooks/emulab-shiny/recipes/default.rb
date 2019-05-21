@@ -24,7 +24,7 @@ package 'gdebi-core'
 # Download the specified package
 remote_file '/tmp/shiny-server.deb' do
   source "#{node['shiny']['package_URL']}"
-  checksum "#{node['shiny']['checksum']}"
+  # checksum "#{node['shiny']['checksum']}"
 end
 
 # Install (and launch) the downloaded package
