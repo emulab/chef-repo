@@ -14,6 +14,7 @@ bash 'Install Redis from tarball' do
     cd redis-stable
     make
     cp src/redis-server /usr/local/bin/
+    cp src/redis-benchmark /usr/local/bin/
     cp src/redis-cli /usr/local/bin/
   EOH
 end
